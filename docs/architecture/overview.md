@@ -37,7 +37,7 @@ The adapter does not provision indexes, ingest documents, manage mappings, retry
 claim live-cluster compatibility. Validate permissions and the supported server/client versions
 in your deployment environment before release.
 
-This package is pre-alpha and supports Python 3.11–3.14. Its opt-in live integration check passed
+This package is in alpha and supports Python 3.11–3.14. Its opt-in live integration check passed
 against OpenSearch 2.19.1 with `opensearch-py` 3.2.0. That local check validates this combination;
 it does not establish compatibility with other server/client versions or production topology.
 The package suite passes on Python 3.11–3.14; on Python 3.12–3.14 the opt-in live test skips when no
@@ -63,10 +63,22 @@ Representative implementation files in this checkout:
 - `src/orbit_search_opensearch/__init__.py`
 - `src/orbit_search_opensearch/store.py`
 
-## Public contract and scope
+## Contract mapping and ownership
 
-The README does not contain a separately headed architecture section. Its responsibility statement above and the public source files define the implemented scope; this guide adds no behavior beyond that description.
+For each `SearchStore.search` call, this adapter validates the collection and query, translates the
+portable query to OpenSearch request fields, opens or resumes a PIT, validates returned hits, and
+normalizes provider errors to `orbit-search` error types. It requests one extra result to decide
+whether a continuation cursor is needed, then returns only the requested number of hits.
+
+The adapter owns its async client and closes it in `aclose()`. It has no implicit relationship to
+Orbit Core lifecycle management; applications must arrange adapter shutdown. PIT management,
+OpenSearch SDK types, sort strategy, and provider error translation stay in this repository.
+
+The cursor is an adapter-private base64url payload containing PIT and sort state plus a query
+fingerprint, authenticated by HMAC-SHA256. It is signed but not encrypted.
 
 ## Boundary rules
 
-Keep provider SDKs, credentials, transports, and provider-specific error translation in provider adapters. Keep reusable capability contracts in the matching capability package and lifecycle orchestration in Core. Apply the relevant layer for this repository and preserve the dependency direction shown above.
+Keep OpenSearch SDK types, transport behavior, credentials, PIT lifecycle, sort details, and provider
+error translation here. Keep portable query/result models in `orbit-search`. Do not add OpenSearch
+query DSL to that shared contract.

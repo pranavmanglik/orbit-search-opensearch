@@ -35,7 +35,7 @@ The adapter does not provision indexes, ingest documents, manage mappings, retry
 claim live-cluster compatibility. Validate permissions and the supported server/client versions
 in your deployment environment before release.
 
-This package is pre-alpha and supports Python 3.11–3.14. Its opt-in live integration check passed
+This package is in alpha and supports Python 3.11–3.14. Its opt-in live integration check passed
 against OpenSearch 2.19.1 with `opensearch-py` 3.2.0. That local check validates this combination;
 it does not establish compatibility with other server/client versions or production topology.
 The package suite passes on Python 3.11–3.14; on Python 3.12–3.14 the opt-in live test skips when no

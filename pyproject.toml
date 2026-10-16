@@ -11,7 +11,7 @@ requires-python = ">=3.11,<3.15"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 dependencies = ["orbit-search>=0.1.0a1,<0.2"]
-classifiers = ["Development Status :: 2 - Pre-Alpha", "Programming Language :: Python :: 3", "Typing :: Typed"]
+classifiers = ["Development Status :: 3 - Alpha", "Programming Language :: Python :: 3", "Typing :: Typed"]
 
 [project.optional-dependencies]
 opensearch = ["opensearch-py[async]>=2.7,<4"]
